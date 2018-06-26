@@ -14,8 +14,8 @@ So previously your code might have looked like this:
  import "os/exec"
 
  func main() {
-	 // will run "echo Hello world".
 	 cmd := exec.Command("echo", "Hello world")
+	 // will run "echo Hello world".
  }
 
 With this package:
@@ -23,9 +23,9 @@ With this package:
  import execMachine "github.com/thegomachine/exec-machine"
 
  func main() {
+	 cmd, := execMachine.Command("echo", "Hello world")
 	 // will run "/bin/sh -c echo Hello world" (or "/bin/zsh -c echo Hello world" etc.)
 	 // on UNIX systems or "cmd.exe /c echo Hello world" on Windows.
-	 cmd := execMachine.Command("echo", "Hello world")
  }
 */
 package exec

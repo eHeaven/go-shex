@@ -36,22 +36,33 @@ $ go get github.com/thegomachine/exec-machine
 
 ## Usage
 
-Like the `os/exec` package, you may use `Command` or `CommandContext` functions:
+So previously your code might have looked like this:
+
+```golang
+import "os/exec"
+
+func main() {
+    cmd := exec.Command("echo", "Hello world")
+    // will run "echo Hello world".
+ }
+```
+
+With this package:
 
 ```golang
 import execMachine "github.com/thegomachine/exec-machine"
 
 func main() {
+    cmd, := execMachine.Command("echo", "Hello world")
     // will run "/bin/sh -c echo Hello world" (or "/bin/zsh -c echo Hello world" etc.)
     // on UNIX systems or "cmd.exe /c echo Hello world" on Windows.
-    cmd := execMachine.Command("echo", "Hello world")
 }
 ```
 
-```golang
-import execMachine "github.com/thegomachine/exec-machine"
+See [GoDoc](https://godoc.org/github.com/thegomachine/exec-machine) for full documentation.
 
-func main() {
-    cmd := execMachine.CommandContext(ctx, "echo", "Hello world")
-}
-```
+## FAQ
+
+* When should I use this library?
+
+If your external commands are not platform specific.
