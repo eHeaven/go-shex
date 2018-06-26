@@ -73,7 +73,7 @@ type ErrInterpreterNotFound struct {
 	envVar string
 }
 
-const errMessageInterpreterNotFound = `"%s" is a required environment variable: it allows to know which command line interpreter to use for executing a command`
+const errMessageInterpreterNotFound = `"%s" is a required environment variable: it allows to know which command line interpreter to use for running a command`
 
 func (e *ErrInterpreterNotFound) Error() string {
 	return fmt.Sprintf(errMessageInterpreterNotFound, e.envVar)
