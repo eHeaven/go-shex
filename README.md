@@ -63,6 +63,10 @@ See [GoDoc](https://godoc.org/github.com/thegomachine/exec-machine) for full doc
 
 ## FAQ
 
-* When should I use this library?
+**When should I use this library?**
 
 If your external commands are not platform specific.
+
+**When should I NOT use this library?**
+
+For every others cases! 😄
