@@ -19,3 +19,39 @@
 </p>
 
 ---
+
+While using the `os/exec` package, you may have encountered some consistency issues:
+a command which was working fine on your command line interpreter fails miserably while calling it
+with the said package.
+
+To address this common problem, the exec-machine library tries to detect your default command line
+interpreter by looking for the `SHELL` environment variable on UNIX systems or `COMSPEC` environment variable
+on Windows.
+
+## Installation
+
+```bash
+$ go get github.com/thegomachine/exec-machine
+```
+
+## Usage
+
+Like the `os/exec` package, you may use `Command` or `CommandContext` functions:
+
+```golang
+import execMachine "github.com/thegomachine/exec-machine"
+
+func main() {
+    // will run "/bin/sh -c echo Hello world" (or "/bin/zsh -c echo Hello world" etc.)
+    // on UNIX systems or "cmd.exe /c echo Hello world" on Windows.
+    cmd := execMachine.Command("echo", "Hello world")
+}
+```
+
+```golang
+import execMachine "github.com/thegomachine/exec-machine"
+
+func main() {
+    cmd := execMachine.CommandContext(ctx, "echo", "Hello world")
+}
+```
