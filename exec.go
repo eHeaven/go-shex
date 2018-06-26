@@ -5,7 +5,7 @@ While using the os/exec package, you may have encountered some consistency issue
 a command which was working fine on your command line interpreter fails miserably while calling it
 with the said package.
 
-To address this common problem, the exec-machine library tries to detec your default command line
+To address this common problem, the exec-machine library tries to detect your default command line
 interpreter by looking for the SHELL environment variable on UNIX systems or COMSPEC environment variable
 on Windows.
 
