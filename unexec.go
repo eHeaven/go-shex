@@ -51,52 +51,50 @@ func CommandContext(ctx context.Context, name string, arg ...string) (*exec.Cmd,
 	return makeCommand(ctx, name, arg...)
 }
 
-func makeCommand(ctx context.Context, name string, arg ...string) (*exec.Cmd, error) {
-	interpreter, err := lookForInterpreter()
-	if err != nil {
-		return nil, err
-	}
-
-	var args []string
-	args = append(args, name)
-	args = append(args, arg...)
-
-	if ctx != nil {
-		return exec.CommandContext(ctx, interpreter[0], interpreter[1], strings.Join(args, " ")), nil
-	}
-
-	return exec.Command(interpreter[0], interpreter[1], strings.Join(args, " ")), nil
+type command struct {
+	binary string
+	flag   string
+	args   string
 }
 
 // ErrInterpreterNotFound is thrown when the command line interpreter was not found.
 type ErrInterpreterNotFound struct {
-	envVar string
+	envVar  string
+	command *command
 }
 
-const errMessageInterpreterNotFound = `"%s" is a required environment variable: it allows to know which command line interpreter to use for running a command`
+const errMessageInterpreterNotFound = `"%s" is a required environment variable: it allows to know which command line interpreter to use for running external command "%s"`
 
 func (e *ErrInterpreterNotFound) Error() string {
-	return fmt.Sprintf(errMessageInterpreterNotFound, e.envVar)
+	return fmt.Sprintf(errMessageInterpreterNotFound, e.envVar, e.command.args)
 }
 
-func lookForInterpreter() ([]string, error) {
-	var (
-		envVar string
-		flag   string
-	)
+func makeCommand(ctx context.Context, name string, arg ...string) (*exec.Cmd, error) {
+	var args []string
+	args = append(args, name)
+	args = append(args, arg...)
 
+	cmd := &command{
+		args: strings.Join(args, " "),
+	}
+
+	var envVar string
 	if runtime.GOOS == "windows" {
 		envVar = "COMSPEC"
-		flag = "/c"
+		cmd.flag = "/c"
 	} else {
 		envVar = "SHELL"
-		flag = "-c"
+		cmd.flag = "-c"
 	}
 
-	binary := os.Getenv(envVar)
-	if binary == "" {
-		return nil, &ErrInterpreterNotFound{envVar}
+	cmd.binary = os.Getenv(envVar)
+	if cmd.binary == "" {
+		return nil, &ErrInterpreterNotFound{envVar, cmd}
 	}
 
-	return []string{binary, flag}, nil
+	if ctx != nil {
+		return exec.CommandContext(ctx, cmd.binary, cmd.flag, cmd.args), nil
+	}
+
+	return exec.Command(cmd.binary, cmd.flag, cmd.args), nil
 }

@@ -9,8 +9,9 @@ import (
 
 func TestErrInterpreterNotFound(t *testing.T) {
 	envVar := "SHELL"
-	err := &ErrInterpreterNotFound{envVar}
-	expected := fmt.Sprintf(errMessageInterpreterNotFound, envVar)
+	cmd := &command{args: "echo Hello world"}
+	err := &ErrInterpreterNotFound{envVar, cmd}
+	expected := fmt.Sprintf(errMessageInterpreterNotFound, envVar, cmd.args)
 	if err.Error() != expected {
 		t.Errorf("error returned a wrong message: got %s want %s", err.Error(), expected)
 	}
