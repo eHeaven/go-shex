@@ -8,5 +8,5 @@ tasks:
   - use: ci
     short: Runs CI process inside a container
     run:
-      - docker build -t thegomachine/exec-machine:ci .
-      - docker run --rm -e "VERSION={{ .Orbit.Version }}" -v "$(pwd)/out:/go/src/github.com/thegomachine/exec-machine/out" thegomachine/exec-machine:ci
+      - docker build -t thegomachine/go-unexec:ci .
+      - docker run --rm -e "VERSION={{ .Orbit.Version }}" -v "$(pwd)/out:/go/src/github.com/thegomachine/go-unexec/out" thegomachine/go-unexec:ci

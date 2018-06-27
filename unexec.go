@@ -1,11 +1,11 @@
 /*
-Package exec is a simple library easing the use of os/exec package for running external commands.
+Package unexec is a simple library easing the use of os/exec package for running cross-platform external commands.
 
 While using the os/exec package, you may have encountered some consistency issues:
 a command which was working fine on your command line interpreter fails miserably while calling it
 with the said package.
 
-To address this common problem, the exec-machine library tries to detect your default command line
+To address this common problem, the go-unexec library tries to detect your default command line
 interpreter by looking for the SHELL environment variable on UNIX systems or COMSPEC environment variable
 on Windows.
 
@@ -20,15 +20,15 @@ So previously your code might have looked like this:
 
 With this package:
 
- import execMachine "github.com/thegomachine/exec-machine"
+ import unexec "github.com/thegomachine/go-unexec"
 
  func main() {
-	 cmd, := execMachine.Command("echo", "Hello world")
+	 cmd, err := unexec.Command("echo", "Hello world")
 	 // will run "/bin/sh -c echo Hello world" (or "/bin/zsh -c echo Hello world" etc.)
 	 // on UNIX systems or "cmd.exe /c echo Hello world" on Windows.
  }
 */
-package exec
+package unexec
 
 import (
 	"context"

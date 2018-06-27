@@ -7,7 +7,7 @@ RUN go get -u gopkg.in/alecthomas/gometalinter.v2 &&\
     gometalinter.v2 --install
 
 # Defines our working directory.
-WORKDIR /go/src/github.com/thegomachine/exec-machine
+WORKDIR /go/src/github.com/thegomachine/go-unexec
 
 # Copies our Go source.
 COPY . .
