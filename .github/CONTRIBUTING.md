@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for considering contributing to the [go-unexec](https://github.com/thegomachine/go-unexec) library. 
+Thank you for considering contributing to the [go-shex](https://github.com/thegomachine/go-shex) package. 
 
 ## Contributing code
 

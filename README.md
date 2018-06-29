@@ -1,20 +1,20 @@
 <p align="center">
     <img src="https://user-images.githubusercontent.com/8983173/41920404-f4baf4e2-7960-11e8-8880-6b54bcef12e2.png" alt="Logo" width="200" height="200" />
 </p>
-<h3 align="center">go-unexec</h3>
-<p align="center">A simple library easing the use of <a href="https://golang.org/pkg/os/exec/">os/exec</a> package for running cross-platform external commands</p>
+<h3 align="center">go-shex</h3>
+<p align="center">A simple package for creating <a href="https://golang.org/pkg/os/exec/#Cmd">exec.Cmd</a> instances which use the current command line interpreter</p>
 <p align="center">
-    <a href="https://travis-ci.org/thegomachine/go-unexec">
-        <img src="https://travis-ci.org/thegomachine/go-unexec.svg?branch=master" alt="Travis CI">
+    <a href="https://travis-ci.org/thegomachine/go-shex">
+        <img src="https://travis-ci.org/thegomachine/go-shex.svg?branch=master" alt="Travis CI">
     </a>
-    <a href="https://godoc.org/github.com/thegomachine/go-unexec">
-        <img src="https://godoc.org/github.com/thegomachine/go-unexec?status.svg" alt="GoDoc">
+    <a href="https://godoc.org/github.com/thegomachine/go-shex">
+        <img src="https://godoc.org/github.com/thegomachine/go-shex?status.svg" alt="GoDoc">
     </a>
-    <a href="https://goreportcard.com/report/thegomachine/go-unexec">
-        <img src="https://goreportcard.com/badge/github.com/thegomachine/go-unexec" alt="Go Report Card">
+    <a href="https://goreportcard.com/report/thegomachine/go-shex">
+        <img src="https://goreportcard.com/badge/github.com/thegomachine/go-shex" alt="Go Report Card">
     </a>
-    <a href="https://codecov.io/gh/thegomachine/go-unexec/branch/master">
-        <img src="https://codecov.io/gh/thegomachine/go-unexec/branch/master/graph/badge.svg" alt="Codecov">
+    <a href="https://codecov.io/gh/thegomachine/go-shex/branch/master">
+        <img src="https://codecov.io/gh/thegomachine/go-shex/branch/master/graph/badge.svg" alt="Codecov">
     </a>
 </p>
 
@@ -24,14 +24,14 @@ While using the `os/exec` package, you may have encountered some consistency iss
 a command which was working fine on your command line interpreter fails miserably while calling it
 with the said package.
 
-To address this common problem, the go-unexec library tries to detect your default command line
+To address this common problem, the go-shex package tries to detect your default command line
 interpreter by looking for the `SHELL` environment variable on UNIX systems or `COMSPEC` environment variable
 on Windows.
 
 ## Installation
 
 ```bash
-$ go get github.com/thegomachine/go-unexec
+$ go get github.com/thegomachine/go-shex
 ```
 
 ## Usage
@@ -50,23 +50,13 @@ func main() {
 With this package:
 
 ```golang
-import unexec "github.com/thegomachine/go-unexec"
+import shex "github.com/thegomachine/go-shex"
 
 func main() {
-    cmd, err := unexec.Command("echo", "Hello world")
+    cmd, err := shex.Command("echo", "Hello world")
     // will run "/bin/sh -c echo Hello world" (or "/bin/zsh -c echo Hello world" etc.)
     // on UNIX systems or "cmd.exe /c echo Hello world" on Windows.
 }
 ```
 
-See [GoDoc](https://godoc.org/github.com/thegomachine/go-unexec) for full documentation.
-
-## FAQ
-
-**When should I use this library?**
-
-If your external commands are not platform specific.
-
-**When should I NOT use this library?**
-
-For every others cases! 😄
+See [GoDoc](https://godoc.org/github.com/thegomachine/go-shex) for full documentation.

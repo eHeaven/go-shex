@@ -1,11 +1,11 @@
 /*
-Package unexec is a simple library easing the use of os/exec package for running cross-platform external commands.
+Package shex is simple package for creating https://golang.org/pkg/os/exec/#Cmd instances which use the current command line interpreter.
 
 While using the os/exec package, you may have encountered some consistency issues:
 a command which was working fine on your command line interpreter fails miserably while calling it
 with the said package.
 
-To address this common problem, the go-unexec library tries to detect your default command line
+To address this common problem, the go-shex library tries to detect your default command line
 interpreter by looking for the SHELL environment variable on UNIX systems or COMSPEC environment variable
 on Windows.
 
@@ -20,15 +20,15 @@ So previously your code might have looked like this:
 
 With this package:
 
- import unexec "github.com/thegomachine/go-unexec"
+ import shex "github.com/thegomachine/go-shex"
 
  func main() {
-	 cmd, err := unexec.Command("echo", "Hello world")
+	 cmd, err := shex.Command("echo", "Hello world")
 	 // will run "/bin/sh -c echo Hello world" (or "/bin/zsh -c echo Hello world" etc.)
 	 // on UNIX systems or "cmd.exe /c echo Hello world" on Windows.
  }
 */
-package unexec
+package shex
 
 import (
 	"context"
