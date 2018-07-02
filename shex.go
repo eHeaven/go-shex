@@ -1,11 +1,11 @@
 /*
-Package shex is simple package for creating https://golang.org/pkg/os/exec/#Cmd instances which use the current command line interpreter.
+Package shex is simple package for creating https://golang.org/pkg/os/exec/#Cmd instances which use the current command interpreter (the shell).
 
 While using the os/exec package, you may have encountered some consistency issues:
-a command which was working fine on your command line interpreter fails miserably while calling it
+a command which was working fine on your command interpreter fails miserably while calling it
 with the said package.
 
-To address this common problem, the go-shex library tries to detect your default command line
+To address this common problem, the go-shex library tries to detect your default command
 interpreter by looking for the SHELL environment variable on UNIX systems or COMSPEC environment variable
 on Windows.
 
@@ -57,13 +57,13 @@ type command struct {
 	args   string
 }
 
-// ErrInterpreterNotFound is thrown when the command line interpreter was not found.
+// ErrInterpreterNotFound is thrown when the command interpreter was not found.
 type ErrInterpreterNotFound struct {
 	envVar  string
 	command *command
 }
 
-const errMessageInterpreterNotFound = `"%s" is a required environment variable: it allows to know which command line interpreter to use for running external command "%s"`
+const errMessageInterpreterNotFound = `"%s" is a required environment variable: it allows to know which command interpreter to use for running external command "%s"`
 
 func (e *ErrInterpreterNotFound) Error() string {
 	return fmt.Sprintf(errMessageInterpreterNotFound, e.envVar, e.command.args)

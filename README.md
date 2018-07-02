@@ -2,7 +2,7 @@
     <img src="https://user-images.githubusercontent.com/8983173/41920404-f4baf4e2-7960-11e8-8880-6b54bcef12e2.png" alt="Logo" width="200" height="200" />
 </p>
 <h3 align="center">go-shex</h3>
-<p align="center">A simple package for creating <a href="https://golang.org/pkg/os/exec/#Cmd">exec.Cmd</a> instances which use the current command line interpreter</p>
+<p align="center">A simple package for creating <a href="https://golang.org/pkg/os/exec/#Cmd">exec.Cmd</a> instances which use the current command interpreter (the shell)</p>
 <p align="center">
     <a href="https://travis-ci.org/thegomachine/go-shex">
         <img src="https://travis-ci.org/thegomachine/go-shex.svg?branch=master" alt="Travis CI">
@@ -21,10 +21,10 @@
 ---
 
 While using the `os/exec` package, you may have encountered some consistency issues:
-a command which was working fine on your command line interpreter fails miserably while calling it
+a command which was working fine on your command interpreter fails miserably while calling it
 with the said package.
 
-To address this common problem, the go-shex package tries to detect your default command line
+To address this common problem, the go-shex package tries to detect your default command
 interpreter by looking for the `SHELL` environment variable on UNIX systems or `COMSPEC` environment variable
 on Windows.
 
