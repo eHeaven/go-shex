@@ -56,6 +56,11 @@ func main() {
     cmd, err := shex.Command("echo", "Hello world")
     // will run "/bin/sh -c echo Hello world" (or "/bin/zsh -c echo Hello world" etc.)
     // on UNIX systems or "cmd.exe /c echo Hello world" on Windows.
+
+    // if you don't want auto-detection, you may also use:
+    cmd, err := shex.SafeCommand("echo", "Hello world")
+    // will run "/bin/sh -c echo Hello world" on UNIX systems
+    // or "cmd.exe /c echo Hello world" on Windows.
 }
 ```
 

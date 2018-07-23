@@ -26,6 +26,11 @@ With this package:
 	 cmd, err := shex.Command("echo", "Hello world")
 	 // will run "/bin/sh -c echo Hello world" (or "/bin/zsh -c echo Hello world" etc.)
 	 // on UNIX systems or "cmd.exe /c echo Hello world" on Windows.
+
+	 // if you don't want auto-detection, you may also use:
+	 cmd, err := shex.SafeCommand("echo", "Hello world")
+	 // will run "/bin/sh -c echo Hello world" on UNIX systems
+	 // or "cmd.exe /c echo Hello world" on Windows.
  }
 */
 package shex
@@ -35,66 +40,70 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"runtime"
 	"strings"
 )
 
+const (
+	auto = iota
+	safe
+)
+
+const (
+	defaultEnvVar = "SHELL"
+	defaultShell  = "/bin/sh"
+	defaultFlag   = "-c"
+)
+
 // Command is a wrapper function around exec.Command function from os/exec package.
-// If the command line interpreter is not found, throws an ErrInterpreterNotFound error.
+// If the command line interpreter is not found, throws an error.
 func Command(name string, arg ...string) (*exec.Cmd, error) {
-	return makeCommand(nil, name, arg...)
+	return makeCommand(nil, auto, name, arg...)
 }
 
 // CommandContext is a wrapper function around exec.CommandContext function from os/exec package.
-// If the command line interpreter is not found, throws an ErrInterpreterNotFound error.
+// If the command line interpreter is not found, throws an error.
 func CommandContext(ctx context.Context, name string, arg ...string) (*exec.Cmd, error) {
-	return makeCommand(ctx, name, arg...)
+	return makeCommand(ctx, auto, name, arg...)
 }
 
-type command struct {
-	binary string
-	flag   string
-	args   string
+// SafeCommand is a wrapper function around exec.Command function from os/exec package.
+// Unlike Command function, it will always use "/bin/sh" on UNIX systems or "cmd.exe" on Windows.
+// If the command line interpreter is not found, throws an error.
+func SafeCommand(name string, arg ...string) (*exec.Cmd, error) {
+	return makeCommand(nil, safe, name, arg...)
 }
 
-// ErrInterpreterNotFound is thrown when the command interpreter was not found.
-type ErrInterpreterNotFound struct {
-	envVar  string
-	command *command
+// SafeCommandContext is a wrapper function around exec.CommandContext function from os/exec package.
+// Unlike CommandContext function, it will always use "/bin/sh" on UNIX systems or "cmd.exe" on Windows.
+// If the command line interpreter is not found, throws an error.
+func SafeCommandContext(ctx context.Context, name string, arg ...string) (*exec.Cmd, error) {
+	return makeCommand(ctx, safe, name, arg...)
 }
 
-const errMessageInterpreterNotFound = `"%s" is a required environment variable: it allows to know which command interpreter to use for running external command "%s"`
-
-func (e *ErrInterpreterNotFound) Error() string {
-	return fmt.Sprintf(errMessageInterpreterNotFound, e.envVar, e.command.args)
-}
-
-func makeCommand(ctx context.Context, name string, arg ...string) (*exec.Cmd, error) {
+func makeCommand(ctx context.Context, mode int, name string, arg ...string) (*exec.Cmd, error) {
 	var args []string
 	args = append(args, name)
 	args = append(args, arg...)
-
-	cmd := &command{
-		args: strings.Join(args, " "),
+	shell, err := fetchShell(mode)
+	if err != nil {
+		return nil, err
 	}
-
-	var envVar string
-	if runtime.GOOS == "windows" {
-		envVar = "COMSPEC"
-		cmd.flag = "/c"
-	} else {
-		envVar = "SHELL"
-		cmd.flag = "-c"
-	}
-
-	cmd.binary = os.Getenv(envVar)
-	if cmd.binary == "" {
-		return nil, &ErrInterpreterNotFound{envVar, cmd}
-	}
-
 	if ctx != nil {
-		return exec.CommandContext(ctx, cmd.binary, cmd.flag, cmd.args), nil
+		return exec.CommandContext(ctx, shell, defaultFlag, strings.Join(args, " ")), nil
 	}
+	return exec.Command(shell, defaultFlag, strings.Join(args, " ")), nil
+}
 
-	return exec.Command(cmd.binary, cmd.flag, cmd.args), nil
+func fetchShell(mode int) (string, error) {
+	shell := defaultShell
+	if mode == auto {
+		shell := os.Getenv(defaultEnvVar)
+		if shell == "" {
+			return "", fmt.Errorf(`"%s" is a required environment variable: it allows to know which command interpreter to use for running the external command`, defaultEnvVar)
+		}
+	}
+	if _, err := exec.LookPath(shell); err != nil {
+		return "", err
+	}
+	return shell, nil
 }
